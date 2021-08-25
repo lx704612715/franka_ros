@@ -186,8 +186,16 @@ int main(int argc, char** argv) {
       joint_states.position.push_back(gripper_state.width * 0.5);
       joint_states.velocity.push_back(0.0);
       joint_states.velocity.push_back(0.0);
-      joint_states.effort.push_back(0.0);
-      joint_states.effort.push_back(0.0);
+      // If gripper is grasping something, the effort should be set as 100
+      // TODO Thinking about rewrite gripper msg to have a bool value
+      if (gripper_state.is_grasped){
+          joint_states.effort.push_back(100.0);
+          joint_states.effort.push_back(100.0);
+      }
+      else{
+          joint_states.effort.push_back(0.0);
+          joint_states.effort.push_back(0.0);
+      }
       gripper_state_publisher.publish(joint_states);
       gripper_state_mutex.unlock();
     }
